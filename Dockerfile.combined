@@ -14,8 +14,8 @@ RUN pip install fastapi uvicorn
 # Copy the entire application
 COPY . .
 
-# Expose port for FastAPI
-EXPOSE 8000
+# Expose port for FastAPI (Cloud Run uses PORT env var)
+EXPOSE 8080
 
-# Run FastAPI server
-CMD ["uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run FastAPI server using PORT environment variable
+CMD uvicorn backend.app:app --host 0.0.0.0 --port ${PORT:-8080}

@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   prt-server:
@@ -8,7 +8,8 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - .:/PRT # Mount for development (optional)
+      - .:/PRT  # Mount for development (optional)
     environment:
       - PYTHONPATH=/PRT
+      - PORT=8080
     restart: unless-stopped
