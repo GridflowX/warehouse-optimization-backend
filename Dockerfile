@@ -13,5 +13,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Now copy the rest of your code
 COPY . .
 
+EXPOSE 8080
 # Default command to run your script
-CMD ["python", "main_json.py"]
+CMD ["python", "./backend.py"]

@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   prt-server:
@@ -6,9 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile.combined
     ports:
-      - "8000:8000"
+      - "8080:8080"
     volumes:
-      - .:/PRT  # Mount for development (optional)
+      - .:/PRT # Mount for development (optional)
     environment:
       - PYTHONPATH=/PRT
     restart: unless-stopped
