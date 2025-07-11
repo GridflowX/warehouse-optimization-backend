@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: prt-algorithm-app
+    env: docker
+    plan: free
+    dockerfilePath: Dockerfile.combined
+    envVars:
+      - key: PORT
+        value: 8080
+    buildCommand: "docker build -t prt-algorithm ."
+    startCommand: "uvicorn backend.app:app --host 0.0.0.0 --port ${PORT}"
+    regions:
+      - oregon
