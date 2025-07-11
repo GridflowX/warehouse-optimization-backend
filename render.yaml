@@ -6,8 +6,8 @@ services:
     dockerfilePath: Dockerfile.combined
     envVars:
       - key: PORT
-        value: 8080
-    buildCommand: "docker build -t prt-algorithm ."
-    startCommand: "uvicorn backend.app:app --host 0.0.0.0 --port ${PORT}"
+        value: 10000
+      - key: PYTHONPATH
+        value: /PRT
     regions:
       - oregon
