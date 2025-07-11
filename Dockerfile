@@ -15,4 +15,4 @@ COPY . .
 
 EXPOSE 8080
 # Default command to run your script
-CMD ["python", "./backend.py"]
+CMD ["python", "./app.py"]
