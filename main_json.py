@@ -17,7 +17,7 @@ def main(stations, setiners, intermediate_nodes, edges_input, edge_cost, speed, 
     adjusted_points, total_perimeter = adjust_polygon_to_edge_length(input_points, edges_input, scale_factor)
 
     #plot the scaled graph
-    plot_scaled_polygon(adjusted_points, total_perimeter, edges_input, stations, setiners, intermediate_nodes)
+    #plot_scaled_polygon(adjusted_points, total_perimeter, edges_input, stations, setiners, intermediate_nodes)
 
     # Making both direction arcs
     edges_input += [(j, i) for (i, j) in edges_input]
@@ -45,25 +45,25 @@ def main(stations, setiners, intermediate_nodes, edges_input, edge_cost, speed, 
         
         gap = zub - zlb
 
-        print()
-        print(f"---------------- Iteration {n} ----------------")
-        print(f"ZLB: {zlb}")
-        print(f"ZUB: {zub}")
-        print(f"GAP: {gap}")
-        print(f"------------------------------------------------")
+        # print()
+        # print(f"---------------- Iteration {n} ----------------")
+        # print(f"ZLB: {zlb}")
+        # print(f"ZUB: {zub}")
+        # print(f"GAP: {gap}")
+        # print(f"------------------------------------------------")
 
         iteration_wise_data = {"Iteration":n, "ZLB":zlb, "ZUB":zub, "GAP":gap, "Lambda":lambda_n, "theta_n":theta_n, "fij":fij, "yij":yij, "s_lambda":s_lambda, "yij_1a": y_ub, "fij_1a": f_ub}
         data.append(iteration_wise_data)
         write_to_csv(data)
-        print()
+        # print()
         
         if gap <= stop_criteria:
-            print("------------- Stopping Criteria Met ------------")
-            print(f"Iterations: {n}")
-            print(f"Final ZLB: {zlb}")
-            print(f"Final ZUB: {zub}")
-            print(f"Final GAP: {gap}")
-            print(f"------------------------------------------------")
+            # print("------------- Stopping Criteria Met ------------")
+            # print(f"Iterations: {n}")
+            # print(f"Final ZLB: {zlb}")
+            # print(f"Final ZUB: {zub}")
+            # print(f"Final GAP: {gap}")
+            # print(f"------------------------------------------------")
             final_data = {"Iteration":f"Final Iteration:{n+1}", "ZLB":f"{zlb}", "ZUB":f"{zub}", "GAP":f"{gap}", "Lambda":lambda_n, "theta_n":theta_n, "fij":fij, "yij":yij, "s_lambda":s_lambda, "yij_1a": y_ub, "fij_1a": f_ub}
             data.append(final_data)
             break
@@ -78,7 +78,7 @@ def main(stations, setiners, intermediate_nodes, edges_input, edge_cost, speed, 
 
     # Export graph data to JSON
     json_file = export_graph_data(input_points, stations, setiners, intermediate_nodes, commodities)
-    print(json.dumps(json_file, indent=2))
+    ## print(json.dumps(json_file, indent=2))
 
     # Save to file (both locations for compatibility)
     with open("json_output.json", "w") as f:
@@ -89,12 +89,12 @@ def main(stations, setiners, intermediate_nodes, edges_input, edge_cost, speed, 
         with open("./backend/json_output.json", "w") as f:
             json.dump(json_file, f, indent=4)
 
-    # Plotting graphs
-    yij_graph(input_points, stations, setiners, intermediate_nodes)
-    fij_graph(input_points, commodities, stations, setiners, intermediate_nodes)
-    plot_bounds_vs_iteration()
-    plot_gap_vs_iteration()
-    individual_fij_graph(input_points, commodities,stations, setiners, intermediate_nodes)
+    # # Plotting graphs
+    # yij_graph(input_points, stations, setiners, intermediate_nodes)
+    # fij_graph(input_points, commodities, stations, setiners, intermediate_nodes)
+    # plot_bounds_vs_iteration()
+    # plot_gap_vs_iteration()
+    # individual_fij_graph(input_points, commodities,stations, setiners, intermediate_nodes)
 
 
 if __name__ == "__main__":

@@ -42,25 +42,25 @@ def main(stations, setiners, intermediate_nodes, edges_input, edge_cost, speed, 
         
         gap = zub - zlb
 
-        print()
-        print(f"---------------- Iteration {n} ----------------")
-        print(f"ZLB: {zlb}")
-        print(f"ZUB: {zub}")
-        print(f"GAP: {gap}")
-        print(f"------------------------------------------------")
+        # print()
+        # print(f"---------------- Iteration {n} ----------------")
+        # print(f"ZLB: {zlb}")
+        # print(f"ZUB: {zub}")
+        # print(f"GAP: {gap}")
+        # print(f"------------------------------------------------")
 
         iteration_wise_data = {"Iteration":n, "ZLB":zlb, "ZUB":zub, "GAP":gap, "Lambda":lambda_n, "theta_n":theta_n, "fij":fij, "yij":yij, "s_lambda":s_lambda, "yij_1a": y_ub, "fij_1a": f_ub}
         data.append(iteration_wise_data)
         write_to_csv(data)
-        print()
+        # print()
         
         if gap <= stop_criteria:
-            print("------------- Stopping Criteria Met ------------")
-            print(f"Iterations: {n}")
-            print(f"Final ZLB: {zlb}")
-            print(f"Final ZUB: {zub}")
-            print(f"Final GAP: {gap}")
-            print(f"------------------------------------------------")
+            # print("------------- Stopping Criteria Met ------------")
+            # print(f"Iterations: {n}")
+            # print(f"Final ZLB: {zlb}")
+            # print(f"Final ZUB: {zub}")
+            # print(f"Final GAP: {gap}")
+            # print(f"------------------------------------------------")
             final_data = {"Iteration":f"Final Iteration:{n+1}", "ZLB":f"{zlb}", "ZUB":f"{zub}", "GAP":f"{gap}", "Lambda":lambda_n, "theta_n":theta_n, "fij":fij, "yij":yij, "s_lambda":s_lambda, "yij_1a": y_ub, "fij_1a": f_ub}
             data.append(final_data)
             break

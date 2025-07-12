@@ -64,22 +64,27 @@
     "edges": [
         {
             "source": 0,
-            "target": 7,
-            "length": 1.0
-        },
-        {
-            "source": 7,
             "target": 1,
-            "length": 1.0
+            "length": 1.41
         },
         {
-            "source": 7,
+            "source": 0,
             "target": 2,
+            "length": 1.41
+        },
+        {
+            "source": 1,
+            "target": 3,
             "length": 1.0
         },
         {
-            "source": 7,
-            "target": 8,
+            "source": 3,
+            "target": 5,
+            "length": 1.0
+        },
+        {
+            "source": 2,
+            "target": 4,
             "length": 1.0
         },
         {
@@ -88,38 +93,13 @@
             "length": 1.0
         },
         {
-            "source": 8,
-            "target": 4,
-            "length": 1.0
-        },
-        {
-            "source": 8,
-            "target": 9,
-            "length": 1.0
-        },
-        {
-            "source": 9,
-            "target": 5,
-            "length": 1.0
-        },
-        {
             "source": 9,
             "target": 6,
             "length": 1.0
         },
         {
-            "source": 2,
-            "target": 7,
-            "length": 1.0
-        },
-        {
-            "source": 8,
-            "target": 7,
-            "length": 1.0
-        },
-        {
             "source": 3,
-            "target": 8,
+            "target": 1,
             "length": 1.0
         },
         {
@@ -137,62 +117,38 @@
         {
             "commodity": 0,
             "source": 0,
-            "target": 7,
+            "target": 1,
             "flow": 52.0
         },
         {
             "commodity": 3,
             "source": 0,
-            "target": 7,
-            "flow": 40.0
-        },
-        {
-            "commodity": 5,
-            "source": 7,
-            "target": 1,
-            "flow": 115.0
-        },
-        {
-            "commodity": 3,
-            "source": 7,
             "target": 2,
             "flow": 40.0
         },
         {
             "commodity": 0,
-            "source": 7,
-            "target": 8,
-            "flow": 52.0
-        },
-        {
-            "commodity": 4,
-            "source": 7,
-            "target": 8,
-            "flow": 30.0
-        },
-        {
-            "commodity": 0,
-            "source": 8,
+            "source": 1,
             "target": 3,
             "flow": 52.0
         },
         {
+            "commodity": 1,
+            "source": 3,
+            "target": 5,
+            "flow": 12.0
+        },
+        {
             "commodity": 4,
-            "source": 8,
+            "source": 2,
             "target": 4,
             "flow": 30.0
         },
         {
-            "commodity": 1,
+            "commodity": 5,
             "source": 8,
-            "target": 9,
-            "flow": 12.0
-        },
-        {
-            "commodity": 1,
-            "source": 9,
-            "target": 5,
-            "flow": 12.0
+            "target": 3,
+            "flow": 115.0
         },
         {
             "commodity": 2,
@@ -201,22 +157,10 @@
             "flow": 25.0
         },
         {
-            "commodity": 4,
-            "source": 2,
-            "target": 7,
-            "flow": 30.0
-        },
-        {
             "commodity": 5,
-            "source": 8,
-            "target": 7,
-            "flow": 115.0
-        },
-        {
-            "commodity": 1,
             "source": 3,
-            "target": 8,
-            "flow": 12.0
+            "target": 1,
+            "flow": 115.0
         },
         {
             "commodity": 5,

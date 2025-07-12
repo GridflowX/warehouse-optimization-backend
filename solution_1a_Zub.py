@@ -2,20 +2,20 @@ import pulp
 import random
 
 def solution_1a(points, stations, edge_cost, arcs, speed, capacity, alpha, beta, commodities, y_feasible):
-  print(f"\n----------------------in solution 1a ZUB----------------\n")
+  ## print(f"\n----------------------in solution 1a ZUB----------------\n")
   nodes = [i for i in range(len(points))]
 
   time = {(i, j): ((((points[i][0] - points[j][0])**2) + ((points[i][1] - points[j][1])**2))**0.5)/speed for (i, j) in arcs}  # t_ij
   cost = {(i, j): edge_cost * ((((points[i][0] - points[j][0])**2) + ((points[i][1] - points[j][1])**2))**0.5) for (i, j) in arcs}
 
-  # print(f"nodes : {nodes}")
-  # print(f"arcs : {arcs}")
-  # print(f"time : {time}")
-  # print(f"cost : {cost}")
-  # print(f"demand : {demand}")
-  # print(f"total_cost : {result_of_cost}")
-  # print(f"alpha : {alpha}")
-  # print(f"beta : {beta}")
+  # ## print(f"nodes : {nodes}")
+  # ## print(f"arcs : {arcs}")
+  # ## print(f"time : {time}")
+  # ## print(f"cost : {cost}")
+  # ## print(f"demand : {demand}")
+  # ## print(f"total_cost : {result_of_cost}")
+  # ## print(f"alpha : {alpha}")
+  # ## print(f"beta : {beta}")
 
   # Define the LP problem
   lp = pulp.LpProblem("Flow_Optimization", pulp.LpMinimize)
@@ -70,15 +70,15 @@ def solution_1a(points, stations, edge_cost, arcs, speed, capacity, alpha, beta,
   # Solve the problem
   lp.solve()
 
-  print("Status:", pulp.LpStatus[lp.status])
+  # ## print("Status:", pulp.LpStatus[lp.status])
 
   # Debug if infeasible
   if lp.status == -1:  # Infeasible
-    print("Initial Setup is better than addition of steiner\n)")
+    # ## print("Initial Setup is better than addition of steiner\n)")
 
-    print("\nDebugging Constraints:")
+    ## print("\nDebugging Constraints:")
 
-    print("\nFlow Conservation Constraints:")
+    ## print("\nFlow Conservation Constraints:")
     for k in commodities:
         src, sink, demand_k = commodities[k]
         for node in nodes:
@@ -94,7 +94,7 @@ def solution_1a(points, stations, edge_cost, arcs, speed, capacity, alpha, beta,
                 print(f"Node {node}: Outflow - Inflow = {balance} (should equal 0)")
 
     # Capacity constraints
-    print("\nCapacity Constraints:")
+    ## print("\nCapacity Constraints:")
     for (i, j) in arcs:
         lhs = pulp.lpSum(flow[k, i, j].varValue for k in commodities if flow[k, i, j].varValue is not None)
         rhs = capacity[i, j]
@@ -104,22 +104,22 @@ def solution_1a(points, stations, edge_cost, arcs, speed, capacity, alpha, beta,
         else:
             print(f"Arc ({i}, {j}): No value assigned (possible issue)")
 
-    print("\n-----------------------------------------------------------\n")
+    ## print("\n-----------------------------------------------------------\n")
 
     return {(i, j): y[i, j] for (i, j) in arcs}, {(k, i, j): flow[k, i, j].varValue for (i, j) in arcs for k in commodities}
     
   else:
       # Output results if feasible
-      print("Objective Value:", pulp.value(lp.objective))
+      ## print("Objective Value:", pulp.value(lp.objective))
       # for k in commodities:
-      #   print(f"----------------------------Commodity {k}:-----------------------------")
+      #   ## print(f"----------------------------Commodity {k}:-----------------------------")
       #   for (i, j) in arcs:
-      #     print(f"Flow on arc ({i}, {j}):", flow[k, i, j].varValue)
-      #   print("------------------------------------------------------------------------\n")
+      #     ## print(f"Flow on arc ({i}, {j}):", flow[k, i, j].varValue)
+      #   ## print("------------------------------------------------------------------------\n")
 
       # for (i, j) in arcs:
-      #   print(f"y({i}, {j}):", y[i, j])
+      #   ## print(f"y({i}, {j}):", y[i, j])
       
-      print("\n-----------------------------------------------------------\n")
+      ## print("\n-----------------------------------------------------------\n")
 
       return pulp.value(lp.objective), {(i, j): y[i, j] for (i, j) in arcs}, {(k, i, j): flow[k, i, j].varValue for (i, j) in arcs for k in commodities}
