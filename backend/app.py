@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import json
-from runner import run_algorithm
+from backend.runner import run_algorithm
 
 app = FastAPI()
 
