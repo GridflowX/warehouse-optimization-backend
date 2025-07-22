@@ -17,7 +17,7 @@ def main(stations, setiners, intermediate_nodes, edges_input, edge_cost, speed, 
     adjusted_points, total_perimeter = adjust_polygon_to_edge_length(input_points, edges_input, scale_factor)
 
     #plot the scaled graph
-    #plot_scaled_polygon(adjusted_points, total_perimeter, edges_input, stations, setiners, intermediate_nodes)
+    plot_scaled_polygon(adjusted_points, total_perimeter, edges_input, stations, setiners, intermediate_nodes)
 
     # Making both direction arcs
     edges_input += [(j, i) for (i, j) in edges_input]
@@ -90,8 +90,8 @@ def main(stations, setiners, intermediate_nodes, edges_input, edge_cost, speed, 
             json.dump(json_file, f, indent=4)
 
     # # Plotting graphs
-    # yij_graph(input_points, stations, setiners, intermediate_nodes)
-    # fij_graph(input_points, commodities, stations, setiners, intermediate_nodes)
+    yij_graph(input_points, stations, setiners, intermediate_nodes)
+    fij_graph(input_points, commodities, stations, setiners, intermediate_nodes)
     # plot_bounds_vs_iteration()
     # plot_gap_vs_iteration()
     # individual_fij_graph(input_points, commodities,stations, setiners, intermediate_nodes)

@@ -6,7 +6,8 @@ import sys
 def run_algorithm(alpha, beta):
     # Get the parent directory where main_json.py is located
     parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    main_script_path = os.path.join(parent_dir, "main_json.py")
+    algorithm_path = os.path.join(parent_dir, "guideway_optimization_algorithm")
+    main_script_path = os.path.join(algorithm_path, "main_json.py")
     
     # Set environment variables
     env = os.environ.copy()
@@ -16,7 +17,7 @@ def run_algorithm(alpha, beta):
     # Run the main_json.py script directly
     result = subprocess.run(
         [sys.executable, main_script_path],
-        cwd=parent_dir,
+        cwd=algorithm_path,
         env=env,
         capture_output=True,
         text=True
@@ -32,7 +33,7 @@ def run_algorithm(alpha, beta):
             return json.load(f)
     else:
         # Fallback to graph_output.json if json_output.json doesn't exist
-        graph_output_path = os.path.join(parent_dir, "graph_output.json")
+        graph_output_path = os.path.join(algorithm_path, "graph_output.json")
         if os.path.exists(graph_output_path):
             with open(graph_output_path, "r") as f:
                 return json.load(f)

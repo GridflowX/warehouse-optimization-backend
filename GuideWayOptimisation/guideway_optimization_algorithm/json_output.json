@@ -64,8 +64,18 @@
     "edges": [
         {
             "source": 0,
+            "target": 1,
+            "length": 1.41
+        },
+        {
+            "source": 0,
             "target": 2,
             "length": 1.41
+        },
+        {
+            "source": 1,
+            "target": 3,
+            "length": 1.0
         },
         {
             "source": 3,
@@ -78,23 +88,8 @@
             "length": 1.0
         },
         {
-            "source": 0,
-            "target": 7,
-            "length": 1.0
-        },
-        {
             "source": 7,
             "target": 1,
-            "length": 1.0
-        },
-        {
-            "source": 7,
-            "target": 8,
-            "length": 1.0
-        },
-        {
-            "source": 8,
-            "target": 3,
             "length": 1.0
         },
         {
@@ -120,10 +115,22 @@
     ],
     "flows": [
         {
+            "commodity": 0,
+            "source": 0,
+            "target": 1,
+            "flow": 52.0
+        },
+        {
             "commodity": 3,
             "source": 0,
             "target": 2,
             "flow": 40.0
+        },
+        {
+            "commodity": 0,
+            "source": 1,
+            "target": 3,
+            "flow": 52.0
         },
         {
             "commodity": 1,
@@ -138,28 +145,10 @@
             "flow": 30.0
         },
         {
-            "commodity": 0,
-            "source": 0,
-            "target": 7,
-            "flow": 52.0
-        },
-        {
             "commodity": 5,
             "source": 7,
             "target": 1,
             "flow": 115.0
-        },
-        {
-            "commodity": 0,
-            "source": 7,
-            "target": 8,
-            "flow": 52.0
-        },
-        {
-            "commodity": 0,
-            "source": 8,
-            "target": 3,
-            "flow": 52.0
         },
         {
             "commodity": 2,
