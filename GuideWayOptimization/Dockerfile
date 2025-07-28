@@ -2,7 +2,7 @@
 FROM python:3.10-slim
 
 # Set working directory
-WORKDIR /PRT
+WORKDIR /GuideWayOptimization
 
 # Copy only requirements.txt first to cache dependencies layer
 COPY requirements.txt .

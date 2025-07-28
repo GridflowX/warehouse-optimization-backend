@@ -6,7 +6,7 @@ import sys
 def run_algorithm(alpha, beta):
     # Get the parent directory where main_json.py is located
     parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    algorithm_path = os.path.join(parent_dir, "guideway_optimization_algorithm")
+    algorithm_path = os.path.join(parent_dir, "guidewayOptimizationAlgorithm")
     main_script_path = os.path.join(algorithm_path, "main_json.py")
     
     # Set environment variables

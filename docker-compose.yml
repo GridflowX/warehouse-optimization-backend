@@ -1,0 +1,44 @@
+services:
+  mainbackend:
+    build:
+      context: ./MainBackend
+    container_name: mainbackend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - guidewayoptimization
+      - packageandretrievaloptimization
+      - wtpalletsoptimization
+    networks:
+      - backend-network
+
+  guidewayoptimization:
+    build:
+      context: ./GuideWayOptimization
+    container_name: guidewayoptimization
+    ports:
+      - "8001:8000"
+    networks:
+      - backend-network
+
+  packageandretrievaloptimization:
+    build:
+      context: ./PackageAndRetrievalOptimization
+    container_name: packageandretrievaloptimization
+    ports:
+      - "8002:8000"
+    networks:
+      - backend-network
+
+  wtpalletsoptimization:
+    build:
+      context: ./WtPalletsOptimization
+    container_name: wtpalletsoptimization
+    ports:
+      - "8003:8000"
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    driver: bridge

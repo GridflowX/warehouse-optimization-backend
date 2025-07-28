@@ -1,0 +1,7 @@
+pandas==2.2.2
+numpy==1.26.4
+networkx==3.2.1
+matplotlib
+fastapi
+uvicorn
+pydantic

@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import json
 from backend.runner import run_algorithm
+import os
 
 app = FastAPI()
 
@@ -19,6 +20,10 @@ class InputParams(BaseModel):
     alpha: float
     beta: float
 
+@app.get("/")
+def root():
+    return {"message": "PRT Algorithm API is running", "status": "healthy"}
+
 @app.post("/input")
 def run(params: InputParams):
     try:
@@ -28,20 +33,13 @@ def run(params: InputParams):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/")
-def root():
-    return {"message": "PRT Algorithm API is running", "status": "healthy"}
-
-@app.get("/health")
-def health_check():
-    return {"status": "healthy"}
-
 @app.get("/output")
 def get_result():
     try:
-        # First try to read json_output.json from backend directory
-        with open("json_output.json", "r") as f:
-            return json.load(f)
+        json_output_path = os.path.join(os.path.dirname(__file__), "json_output.json")
+        if os.path.exists(json_output_path):
+            with open(json_output_path, "r") as f:
+                return json.load(f)
     except FileNotFoundError:
         try:
             # Try parent directory
@@ -50,7 +48,7 @@ def get_result():
         except FileNotFoundError:
             try:
                 # Fallback to graph_output.json if json_output.json doesn't exist
-                with open("../graph_output.json", "r") as f:
+                with open("../guidewayOptimizationAlgorithm/graph_output.json", "r") as f:
                     return json.load(f)
             except FileNotFoundError:
                 raise HTTPException(status_code=404, detail="No result found")

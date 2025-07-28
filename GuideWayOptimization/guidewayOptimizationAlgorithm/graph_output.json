@@ -88,8 +88,8 @@
             "length": 1.0
         },
         {
-            "source": 7,
-            "target": 1,
+            "source": 8,
+            "target": 3,
             "length": 1.0
         },
         {
@@ -98,13 +98,13 @@
             "length": 1.0
         },
         {
-            "source": 4,
-            "target": 2,
+            "source": 3,
+            "target": 1,
             "length": 1.0
         },
         {
-            "source": 2,
-            "target": 7,
+            "source": 4,
+            "target": 8,
             "length": 1.0
         },
         {
@@ -146,8 +146,8 @@
         },
         {
             "commodity": 5,
-            "source": 7,
-            "target": 1,
+            "source": 8,
+            "target": 3,
             "flow": 115.0
         },
         {
@@ -158,14 +158,14 @@
         },
         {
             "commodity": 5,
-            "source": 4,
-            "target": 2,
+            "source": 3,
+            "target": 1,
             "flow": 115.0
         },
         {
             "commodity": 5,
-            "source": 2,
-            "target": 7,
+            "source": 4,
+            "target": 8,
             "flow": 115.0
         },
         {
