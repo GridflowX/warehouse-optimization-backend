@@ -2,31 +2,20 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from commonCoordinates import passenger_counts
+
+
 # Print the current working directory to verify the script's location
-print("Current working directory:", os.getcwd())
+# print("Current working directory:", os.getcwd())
 
-# File names for bus limit 50 and 80
-bus_limit_50_files = [
-      "exp1_passengerdata_50_392.csv",
-"exp1_passengerdata_50_896.csv","exp1_passengerdata_50_2968.csv",
-"exp1_passengerdata_50_4032.csv","exp1_passengerdata_50_5040.csv","exp1_passengerdata_50_7952.csv",
-]
-
-bus_limit_80_files = [
-    "exp1_passengerdata_80_392.csv","exp1_passengerdata_80_896.csv","exp1_passengerdata_80_2968.csv",
-"exp1_passengerdata_80_4032.csv","exp1_passengerdata_80_5040.csv","exp1_passengerdata_80_7952.csv",
-]
-
-# Pod file names (unoptimized pod system)
-pod_files = [
-    "392_exp1.csv","896_exp1.csv","2968_exp1.csv","4032_exp1.csv","5040_exp1.csv","7952_exp1.csv",
-]
-
-# Pod-optimized file names
-pod_opt_files = [
-    "392_exp1_allocations.csv","896_exp1_allocations.csv","2968_exp1_allocations.csv",
-"4032_exp1_allocations.csv","5040_exp1_allocations.csv","7952_exp1_allocations.csv",
-]
+# Generate file names for exp2 based on commonCoordinates data
+bus_limit_50_files = [f"exp1_passengerdata_50_{count}.csv" for count in passenger_counts]
+bus_limit_80_files = [f"exp1_passengerdata_80_{count}.csv" for count in passenger_counts]
+pod_files = [f"{count}_exp1.csv" for count in passenger_counts]
+pod_opt_files = [f"{count}_exp1_allocations.csv" for count in passenger_counts]
 
 # Function to calculate average waiting_time for any file
 def get_average_waiting_time(file_name):
@@ -35,7 +24,7 @@ def get_average_waiting_time(file_name):
         df.columns = df.columns.str.strip()  # Trim spaces
 
         if 'waiting_time' not in df.columns:
-            print(f"Error: 'waiting_time' column missing in {file_name}.")
+            #print(f"Error: 'waiting_time' column missing in {file_name}.")
             return None
 
         # Ensure column is numeric
@@ -48,14 +37,11 @@ def get_average_waiting_time(file_name):
         return df['waiting_time'].mean()
 
     except FileNotFoundError:
-        print(f"Error: The file '{file_name}' was not found.")
+        #print(f"Error: The file '{file_name}' was not found.")
         return None
     except Exception as e:
-        print(f"Error reading file '{file_name}': {e}")
+        #print(f"Error reading file '{file_name}': {e}")
         return None
-
-# Unified passenger counts for the x-axis
-passenger_counts = [392, 896, 2968, 4032, 5040,7952]
 
 # Calculate average waiting times for all systems
 avg_waiting_time_50 = [get_average_waiting_time(file) for file in bus_limit_50_files]
@@ -89,5 +75,5 @@ plt.tight_layout()
 # Save the plot with specified DPI for consistent dimensions
 plt.savefig('exp1_a.png', dpi=100, bbox_inches='tight')
 
-# Show the plot
-plt.show()
+# # Show the plot
+# plt.show()

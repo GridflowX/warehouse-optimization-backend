@@ -32,7 +32,8 @@ scripts = [
     os.path.join(current_dir, "exp4_with_exp3distribution_Unoptimized.py"),
     os.path.join(current_dir, "exp4_Optimized-uniform.py"),
     os.path.join(current_dir, "exp4_Optimized-nonuniform.py"),
-    os.path.join(current_dir, "truck_automated_exp4.py")
+    os.path.join(current_dir, "truck_automated_exp4.py"),
+    os.path.join(current_dir, "exp4_waiting_plot.py"),
 ]
 
 

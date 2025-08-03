@@ -7,7 +7,7 @@ from collections import defaultdict
 import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from commonCoordinates import time_edges, distance_edges, stops
+from commonCoordinates import time_edges, distance_edges, stops, MAX_PODS, board_deboard, passenger_counts
 
 # Graph for routing (time in seconds)
 graph = nx.Graph()
@@ -20,13 +20,8 @@ g = nx.Graph()
 for u, v, w in distance_edges:
     g.add_edge(u, v, weight=w)
 
-board_deboard = 4
-# os.makedirs("output", exist_ok=True)
-MAX_PODS = 184
-
-# Now CSV files instead of Excel files
 csv_files = [
-       "392_exp1.csv", "896_exp1.csv","2968_exp1.csv", "4032_exp1.csv", "5040_exp1.csv", "7952_exp1.csv"
+    f"{count}_exp1.csv" for count in passenger_counts
 ]
 
 def travel_time(from_stop, to_stop):

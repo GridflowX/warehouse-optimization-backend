@@ -1,53 +1,21 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from commonCoordinates import passenger_counts
 
 # Print the current working directory to verify the script's location
 print("Current working directory:", os.getcwd())
 
-# File names for bus limit 50 and 80
-bus_limit_50_files = [
-    "exp4_passengerdata_50_392.csv",
-    "exp4_passengerdata_50_896.csv",
-    "exp4_passengerdata_50_2968.csv",
-    "exp4_passengerdata_50_4032.csv",
-    "exp4_passengerdata_50_5040.csv",
-    "exp4_passengerdata_50_7952.csv"
-]
-
-bus_limit_80_files = [
-    "exp4_passengerdata_80_392.csv",
-    "exp4_passengerdata_80_896.csv",
-    "exp4_passengerdata_80_2968.csv",
-    "exp4_passengerdata_80_4032.csv",
-    "exp4_passengerdata_80_5040.csv",
-    "exp4_passengerdata_80_7952.csv"
-]
-
-# Pod file names uniform (first pod system)
-pod_files = [
-    "392_exp4_uniform.csv","896_exp4_uniform.csv","2968_exp4_uniform.csv","4032_exp4_uniform.csv",
-    "5040_exp4_uniform.csv","7952_exp4_uniform.csv"
-]
-
-
-# Pod-optimized file names
-pod_opt_files = [
-    "392_exp4_uniform_allocations.csv","896_exp4_uniform_allocations.csv","2968_exp4_uniform_allocations.csv","4032_exp4_uniform_allocations.csv",
-    "5040_exp4_uniform_allocations.csv","7952_exp4_uniform_allocations.csv"
-]
-
-# Alternative pod system 1 file names using exp3 not optimized
-pod_alt1_files = [
-    "392_exp4_non-uniform.csv","896_exp4_non-uniform.csv","2968_exp4_non-uniform.csv","4032_exp4_non-uniform.csv",
-    "5040_exp4_non-uniform.csv","7952_exp4_non-uniform.csv"
-]
-
-# Alternative pod system 2 file names optimized
-pod_alt2_files = [
-    "392_exp4_non-uniform_allocations.csv","2968_exp4_non-uniform_allocations.csv","4032_exp4_non-uniform_allocations.csv","7952_exp4_non-uniform_allocations.csv",
-    "5040_exp4_non-uniform_allocations.csv","7952_exp4_non-uniform_allocations.csv"
-]
+# Generate file names for exp4 based on commonCoordinates data
+bus_limit_50_files = [f"exp4_passengerdata_50_{count}.csv" for count in passenger_counts]
+bus_limit_80_files = [f"exp4_passengerdata_80_{count}.csv" for count in passenger_counts]
+pod_files = [f"{count}_exp4_uniform.csv" for count in passenger_counts]
+pod_opt_files = [f"{count}_exp4_uniform_allocations.csv" for count in passenger_counts]
+pod_alt1_files = [f"{count}_exp4_non-uniform.csv" for count in passenger_counts]
+pod_alt2_files = [f"{count}_exp4_non-uniform_allocations.csv" for count in passenger_counts]
 
 # Function to calculate average waiting_time for any file
 def get_average_waiting_time(file_name):
@@ -74,9 +42,6 @@ def get_average_waiting_time(file_name):
     except Exception as e:
         print(f"Error reading file '{file_name}': {e}")
         return None
-
-# Unified passenger counts for the x-axis
-passenger_counts = [ 7952]
 
 # Calculate average waiting times for all systems
 avg_waiting_time_50 = [get_average_waiting_time(file) for file in bus_limit_50_files]
@@ -114,5 +79,5 @@ plt.legend()
 # Save the plot
 plt.savefig('average_waiting_time_comparison_exp4_all_systems.png')
 
-# Show the plot
-plt.show()
+# # Show the plot
+# plt.show()

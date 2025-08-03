@@ -68,7 +68,7 @@ def tsp_path(start, end, graph, all_paths):
 
 # Step 6: Compute 4 different paths
 paths = []
-for i in range(4):
+for i in range(5):
     start = extreme_nodes[i]
     end = extreme_nodes[(i+1)%len(extreme_nodes)]
     path, dist = tsp_path(start, end, G, all_pairs_shortest)
@@ -80,7 +80,7 @@ for i, (p, d) in enumerate(paths):
     print(f"Bus {i+1}: {' → '.join(p)} | Distance: {d} km")
 
 # Step 8: Plot all 4 paths side by side
-fig, axs = plt.subplots(1, 4, figsize=(22, 5))
+fig, axs = plt.subplots(1, 5, figsize=(22, 5))
 pos = coords
 
 for i, (p, d) in enumerate(paths):
@@ -101,7 +101,7 @@ plt.tight_layout()
 plt.show()
 
 # Find the shortest path
-shortest_bus_index = min(range(4), key=lambda i: paths[i][1])
+shortest_bus_index = min(range(5), key=lambda i: paths[i][1])
 shortest_path, shortest_dist = paths[shortest_bus_index]
 
 print(f"\n🏆 Shortest Path is by Bus {shortest_bus_index + 1}")

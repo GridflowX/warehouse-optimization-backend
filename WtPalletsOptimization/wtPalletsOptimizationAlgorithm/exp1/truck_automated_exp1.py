@@ -9,7 +9,7 @@ from datetime import datetime
 import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from commonCoordinates import time_edges, distance_edges, stops, bus_routes_1, bus_routes_2, bus_routes_3, bus_routes_4
+from commonCoordinates import time_edges, SPEED_KM_PER_HOUR, board_deboard, distance_edges, stops, passenger_counts, capacities, bus_distances, bus_previous_stops, bus_trip_counts, start_node, stop_node, paths, bus_paths, bus_distances_update, bus_previous_stops_update, bus_trip_counts_update
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -24,22 +24,6 @@ cursor = conn.cursor()
 graph = nx.Graph()
 for u, v, w in time_edges:
     graph.add_edge(u, v, weight=w)
-
-# Constants
-board_deboard = 4
-SPEED_KM_PER_HOUR = 40
-
-# Bus Paths
-bus1_path = bus_routes_1  # Bus ID = 1
-bus2_path = bus_routes_2  # Bus ID = 2
-bus3_path = bus_routes_3 # Bus ID = 3
-bus4_path = bus_routes_4  # Bus ID = 4
-
-# Initialize dictionaries
-bus_distances = {1: 0, 2: 0, 3: 0, 4: 0}
-bus_previous_stops = {1: None, 2: None, 3: None, 4: None}
-bus_trip_counts = {1: 0, 2: 0, 3: 0, 4: 0}
-
 
 # Function to generate random arrival time
 def generate_random_arrival_time():
@@ -62,26 +46,19 @@ def reset_passenger_table():
     cursor.execute("DELETE FROM passenger")
     cursor.execute("DELETE FROM sqlite_sequence WHERE name='passenger'")
     conn.commit()
-    print("Passenger table cleared and primary key reset.")
+    #print("Passenger table cleared and primary key reset.")
 
 
 # Function to initialize the bus table
 def initialize_bus_table():
     cursor.execute("DELETE FROM bus")
-    cursor.execute(
+    for idx, (start, stop, path) in enumerate(zip(start_node, stop_node, paths), start=1):
+        cursor.execute(
         "INSERT INTO bus (id, present_stop, destination_stop, time, path, passenger_count) VALUES (?, ?, ?, ?, ?, ?)",
-        (1, 'A', 'B', 0, 'AHIECGJFDB', 0))
-    cursor.execute(
-        "INSERT INTO bus (id, present_stop, destination_stop, time, path, passenger_count) VALUES (?, ?, ?, ?, ?, ?)",
-        (2, 'B', 'F', 0, 'BDIAHCEGJF', 0))
-    cursor.execute(
-        "INSERT INTO bus (id, present_stop, destination_stop, time, path, passenger_count) VALUES (?, ?, ?, ?, ?, ?)",
-        (3, 'F', 'C', 0, 'FJGEIDHBAC', 0))
-    cursor.execute(
-        "INSERT INTO bus (id, present_stop, destination_stop, time, path, passenger_count) VALUES (?, ?, ?, ?, ?, ?)",
-        (4, 'C', 'E', 0, 'CIHABDFJGE', 0))
+        (idx, start, stop, 0, path, 0)
+    )
     conn.commit()
-    print("Bus table initialized.")
+    #print("Bus table initialized.")
 
 
 # Function to calculate distance for passengers
@@ -99,7 +76,7 @@ def calculate_distance_for_passengers():
                 total_distance += distance
         cursor.execute("UPDATE passenger SET distance = ? WHERE id = ?", (total_distance, passenger_id))
     conn.commit()
-    print("Distance updated for all passengers.")
+    #print("Distance updated for all passengers.")
 
 
 # Function to process bus operations
@@ -109,7 +86,7 @@ def busfunction(busid, present_stop, destination_stop, next_stop, buspath, t, nu
     # Passenger deboarding
     cursor.execute("SELECT * FROM passenger WHERE flag=? AND destination_stop=? AND bus_id=?", (1, present_stop, busid))
     p_update = cursor.fetchall()
-    print(f"Bus {busid} at {present_stop}: Found {len(p_update)} passengers to deboard.")
+    #print(f"Bus {busid} at {present_stop}: Found {len(p_update)} passengers to deboard.")
     for p in p_update:
         passenger_id = p[0]
         deboard(passenger_id, t)
@@ -128,13 +105,13 @@ def busfunction(busid, present_stop, destination_stop, next_stop, buspath, t, nu
             t += board_deboard
             number_of_passenger -= 1
             junction_deboards += 1
-    print(f"Bus {busid} at {present_stop}: Deboarded {junction_deboards} passengers at junction.")
+    #print(f"Bus {busid} at {present_stop}: Deboarded {junction_deboards} passengers at junction.")
 
     # Passenger boarding
     cursor.execute("SELECT * FROM passenger WHERE arrival_time<=? AND flag=? AND arrival_stop=? AND reached=?",
                    (t, 0, present_stop, 0))
     p_update = cursor.fetchall()
-    print(f"Bus {busid} at {present_stop}: Found {len(p_update)} passengers to board.")
+    #print(f"Bus {busid} at {present_stop}: Found {len(p_update)} passengers to board.")
     for p in p_update:
         passenger_id = p[0]
         if findnext(p[7], present_stop, destination_stop) == 1 and number_of_passenger < capacity:
@@ -212,7 +189,7 @@ def save_to_csv(total_passenger_count, capacity):
 
         # Save the processed DataFrame
         df.to_csv(filename, index=False)
-        print(f"Final dataset with additional columns saved to {filename}")
+        #print(f"Final dataset with additional columns saved to {filename}")
     except Exception as e:
         print(f"Error saving CSV file {filename}: {e}")
 
@@ -249,7 +226,7 @@ def log_cost_value(total_distance_all_buses, total_passenger_count, capacity):
         action = "appended"
 
     conn.commit()
-    print(f"Cost value {action} in {table_name} for {total_passenger_count} passengers: {cost_value:.4f}")
+    #print(f"Cost value {action} in {table_name} for {total_passenger_count} passengers: {cost_value:.4f}")
     return cost_value, avg_waiting_time
 
 
@@ -257,9 +234,9 @@ def log_cost_value(total_distance_all_buses, total_passenger_count, capacity):
 def main_simulation(total_passenger_count, capacity):
     reset_passenger_table()
     initialize_bus_table()
-    bus_distances.update({1: 0, 2: 0, 3: 0, 4: 0})
-    bus_previous_stops.update({1: None, 2: None, 3: None, 4: None})
-    bus_trip_counts.update({1: 0, 2: 0, 3: 0, 4: 0})
+    bus_distances.update(bus_distances_update)
+    bus_previous_stops.update(bus_previous_stops_update)
+    bus_trip_counts.update(bus_trip_counts_update)
 
     random.seed(total_passenger_count)
     pairs = list(permutations(elements, 2))
@@ -276,70 +253,61 @@ def main_simulation(total_passenger_count, capacity):
             (arrival_time, arrival_stop, destination_stop, 0, 0, 0, path, 0, 0, 0, arrival_time, 0)
         )
     conn.commit()
-    print(f"{total_passenger_count} Passengers added successfully for capacity {capacity}.")
+    #print(f"{total_passenger_count} Passengers added successfully for capacity {capacity}.")
     calculate_distance_for_passengers()
 
     cursor.execute("SELECT COUNT(*) FROM passenger WHERE reached=0")
     initial_remaining = cursor.fetchone()[0]
-    print(f"Initial passengers with reached=0: {initial_remaining}")
+    #print(f"Initial passengers with reached=0: {initial_remaining}")
 
     i = 2
     maxi = 0
     while True:
         cursor.execute("SELECT COUNT(*) FROM passenger WHERE reached=0")
         remaining_passengers = cursor.fetchone()[0]
-        print(f"Remaining passengers: {remaining_passengers}")
+        #print(f"Remaining passengers: {remaining_passengers}")
         if remaining_passengers == 0:
             total_distance_all_buses = sum(bus_distances.values())
             cost_value, avg_waiting_time = log_cost_value(total_distance_all_buses, total_passenger_count, capacity)
             save_to_csv(total_passenger_count, capacity)
-            print(f"\nResults for {total_passenger_count} passengers with capacity {capacity}:")
-            print(f"Total distance traveled by each bus (in km):")
+            #print(f"\nResults for {total_passenger_count} passengers with capacity {capacity}:")
+            #print(f"Total distance traveled by each bus (in km):")
             for busid, distance_in_km in bus_distances.items():
                 print(f"Bus {busid}: {distance_in_km:.2f} km (Trips: {bus_trip_counts[busid]})")
-            print(f"Total distance traveled by all buses: {total_distance_all_buses:.2f} km")
-            print(f"Total trips by all buses: {sum(bus_trip_counts.values())}")
-            print(f"Cost value: {cost_value:.4f}")
-            print(f"Average waiting time: {avg_waiting_time:.2f} seconds")
-            print(f"Maximum passengers on any bus: {maxi}")
+            # print(f"Total distance traveled by all buses: {total_distance_all_buses:.2f} km")
+            # print(f"Total trips by all buses: {sum(bus_trip_counts.values())}")
+            # print(f"Cost value: {cost_value:.4f}")
+            # print(f"Average waiting time: {avg_waiting_time:.2f} seconds")
+            # print(f"Maximum passengers on any bus: {maxi}")
             break
 
         cursor.execute("SELECT * FROM bus ORDER BY time")
         buses = cursor.fetchall()
         if not buses:
-            print("No buses found in the database! Check bus table initialization.")
+            #print("No buses found in the database! Check bus table initialization.")
             break
-        print(f"Found {len(buses)} buses to process.")
+        #print(f"Found {len(buses)} buses to process.")
         for bus in buses:
             busid, present_stop, destination_stop, t, path, bus_passenger_count = bus
-            print(f"Processing Bus {busid} at {t}, Current stop: {present_stop}, Destination: {destination_stop}")
-            if path == 'AHIECGJFDB':
-                next_stop = bus1_path[i % 10]
-                bus_passenger_count = busfunction(busid, present_stop, destination_stop, next_stop, bus1_path, t,
-                                                  bus_passenger_count, capacity)
-            elif path == 'BDIAHCEGJF':
-                next_stop = bus2_path[i % 10]
-                bus_passenger_count = busfunction(busid, present_stop, destination_stop, next_stop, bus2_path, t,
-                                                  bus_passenger_count, capacity)
-            elif path == 'FJGEIDHBAC':
-                next_stop = bus3_path[i % 10]
-                bus_passenger_count = busfunction(busid, present_stop, destination_stop, next_stop, bus3_path, t,
-                                                  bus_passenger_count, capacity)
+            #print(f"Processing Bus {busid} at {t}, Current stop: {present_stop}, Destination: {destination_stop}")
+            
+            bus_path = bus_paths.get(path)
+
+            if bus_path:
+                next_stop = bus_path[i % len(bus_path)]
+                bus_passenger_count = busfunction(
+                    busid, present_stop, destination_stop, next_stop,
+                    bus_path, t, bus_passenger_count, capacity
+                )
             else:
-                next_stop = bus4_path[i % 10]
-                bus_passenger_count = busfunction(busid, present_stop, destination_stop, next_stop, bus4_path, t,
-                                                  bus_passenger_count, capacity)
+                print(f"Warning: Unknown path '{path}' for bus ID {busid}")
+
             maxi = max(maxi, bus_passenger_count)
         i += 1
 
-
-# Process specified passenger counts for both capacities
-passenger_counts = [392, 896, 2968, 4032, 5040, 7952]
-capacities = [50, 80]
-
 for passenger_count in passenger_counts:
     for capacity in capacities:
-        print(f"\nStarting simulation for {passenger_count} passengers with capacity {capacity}...")
+        #print(f"\nStarting simulation for {passenger_count} passengers with capacity {capacity}...")
         main_simulation(passenger_count, capacity)
 
 conn.close()

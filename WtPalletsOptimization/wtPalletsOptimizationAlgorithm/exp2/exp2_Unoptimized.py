@@ -5,6 +5,10 @@ import sqlite3
 import csv
 import numpy as np  # For generating bimodal Gaussian distribution
 import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from commonCoordinates import time_edges, distance_edges, stops, minimum_distance, board_deboard, passenger_counts
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -15,33 +19,16 @@ cursor = conn.cursor()
 # Initialize the time-based graph
 graph = nx.Graph()
 
-graph.add_edge('A', 'B', weight=1170)
-graph.add_edge('B', 'Q', weight=1800)
-graph.add_edge('B', 'C', weight=630)
-graph.add_edge('B', 'R', weight=1350)
-graph.add_edge('C', 'D', weight=1530)
-graph.add_edge('P', 'Q', weight=900)
-graph.add_edge('R', 'S', weight=450)
+# Define all edges with time weights
+for u, v, w in time_edges:
+    graph.add_edge(u, v, weight=w)
 
-# Initialize the distance-based graph
+# Initialize the distance-based graph (for distance calculation)
 distance_graph = nx.Graph()
-distance_graph.add_edge('A', 'B', weight=13)
-distance_graph.add_edge('B', 'Q', weight=20)
-distance_graph.add_edge('B', 'C', weight=7)
-distance_graph.add_edge('B', 'R', weight=15)
-distance_graph.add_edge('C', 'D', weight=17)
-distance_graph.add_edge('P', 'Q', weight=10)
-distance_graph.add_edge('R', 'S', weight=5)
+for u, v, w in distance_edges:
+    distance_graph.add_edge(u, v, weight=w)
 
-# Stops and positions
-stops = ['A', 'B', 'C', 'D', 'P', 'Q', 'R', 'S']
-
-# Global constants
-minimum_distance = 4
-board_deboard = 4
-
-# Passenger counts array and corresponding output file names
-passenger_counts = [392, 896, 2968, 4032, 5040,7952]
+# Output files for exp2
 output_files = [f"{count}_exp2.csv" for count in passenger_counts]
 
 # Utility functions

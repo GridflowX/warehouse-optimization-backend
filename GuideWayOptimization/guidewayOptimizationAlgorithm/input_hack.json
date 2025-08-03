@@ -33,9 +33,9 @@
   ],
   "edge_cost": 1,
   "speed": 30,
-  "alpha": 0,
-  "beta": 0.1,
-  "stop_criteria": 1e-1,
+  "alpha": 0.5,
+  "beta": 0.5,
+  "stop_criteria": 1e-2,
   "capacity": {
     "[0, 1]": 115,
     "[0, 2]": 115,

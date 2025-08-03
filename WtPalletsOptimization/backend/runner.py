@@ -5,33 +5,50 @@ import sys
 import pandas as pd
 from fastapi.responses import JSONResponse
 import io
+import requests
 
 def run_algorithm():
-    parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    algorithm_path = os.path.join(parent_dir, "wtPalletsOptimizationAlgorithm")
-    main_script_path = os.path.join(algorithm_path, "run_all_exp.py")
+    try:
+        # Fetch output from algo1
+        r = requests.get("http://mainbackend:8000/output")
+        r.raise_for_status()
+        guideway_data = r.json()
+    
+        parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        algorithm_path = os.path.join(parent_dir, "wtPalletsOptimizationAlgorithm")
+        main_script_path = os.path.join(algorithm_path, "run_all_exp.py")
 
-    # Capture output in memory and write to file
-    process_output = io.StringIO()
+        env_data = json.dumps(guideway_data)
 
-    result = subprocess.run(
-        [sys.executable, main_script_path],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True
-    )
+        # Set environment variables
+        env = os.environ.copy()
+        env["GUIDEWAY_DATA"] = env_data
 
-    # Write output to log file
-    with open("output_log.txt", "w") as f:
-        f.write(result.stdout)
+        # Capture output in memory and write to file
+        process_output = io.StringIO()
 
-    # Debug: print to console too
-    print(result.stdout)
+        result = subprocess.run(
+            [sys.executable, main_script_path],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            env=env,
+        )
 
-    if result.returncode != 0:
-        raise Exception(f"Algorithm failed:\n{result.stdout.strip()}")
+        # Write output to log file
+        with open("output_log.txt", "w") as f:
+            f.write(result.stdout)
 
-    return get_all_waiting_averages(base_dir=parent_dir)
+        # Debug: print to console too
+        print(result.stdout)
+
+        if result.returncode != 0:
+            raise Exception(f"Algorithm failed:\n{result.stdout.strip()}")
+
+        return get_all_waiting_averages(base_dir=parent_dir)
+
+    except Exception as e:
+        return {"error": str(e)}
 
 
 def get_all_waiting_averages(base_dir):

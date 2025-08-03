@@ -1,33 +1,19 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from commonCoordinates import passenger_counts
 
 # Print the current working directory to verify the script's location
 print("Current working directory:", os.getcwd())
 
-# File names for bus limit 50 and 80
-bus_limit_50_files = [
-    "exp2_passengerdata_50_392.csv",
-"exp2_passengerdata_50_896.csv","exp2_passengerdata_50_2968.csv",
-"exp2_passengerdata_50_4032.csv","exp2_passengerdata_50_5040.csv","exp2_passengerdata_50_7952.csv",
-]
-
-bus_limit_80_files = [
-    "exp2_passengerdata_80_392.csv",
-"exp2_passengerdata_80_896.csv","exp2_passengerdata_80_2968.csv",
-"exp2_passengerdata_80_4032.csv","exp2_passengerdata_80_5040.csv","exp2_passengerdata_80_7952.csv",
-]
-
-# Pod file names (first pod system)
-pod_files = [
-     "392_exp2.csv","896_exp2.csv","2968_exp2.csv","4032_exp2.csv","5040_exp2.csv","7952_exp2.csv",
-]
-
-# Pod-optimized file names
-pod_opt_files = [
-    "392_exp2_allocations.csv","896_exp2_allocations.csv","2968_exp2_allocations.csv",
-"4032_exp2_allocations.csv","5040_exp2_allocations.csv","7952_exp2_allocations.csv",
-]
+# Generate file names for exp2 based on commonCoordinates data
+bus_limit_50_files_exp2 = [f"exp2_passengerdata_50_{count}.csv" for count in passenger_counts]
+bus_limit_80_files_exp2 = [f"exp2_passengerdata_80_{count}.csv" for count in passenger_counts]
+pod_files_exp2 = [f"{count}_exp2.csv" for count in passenger_counts]
+pod_opt_files_exp2 = [f"{count}_exp2_allocations.csv" for count in passenger_counts]
 
 # Function to calculate average waiting_time for any file
 def get_average_waiting_time(file_name):
@@ -55,14 +41,13 @@ def get_average_waiting_time(file_name):
         print(f"Error reading file '{file_name}': {e}")
         return None
 
-# Unified passenger counts for the x-axis
-passenger_counts = [392,896,2968, 4032, 5040, 7952]
+# Using passenger counts from commonCoordinates
 
 # Calculate average waiting times for all systems
-avg_waiting_time_50 = [get_average_waiting_time(file) for file in bus_limit_50_files]
-avg_waiting_time_80 = [get_average_waiting_time(file) for file in bus_limit_80_files]
-avg_waiting_time_pod = [get_average_waiting_time(file) for file in pod_files]
-avg_waiting_time_pod_opt = [get_average_waiting_time(file) for file in pod_opt_files]
+avg_waiting_time_50 = [get_average_waiting_time(file) for file in bus_limit_50_files_exp2]
+avg_waiting_time_80 = [get_average_waiting_time(file) for file in bus_limit_80_files_exp2]
+avg_waiting_time_pod = [get_average_waiting_time(file) for file in pod_files_exp2]
+avg_waiting_time_pod_opt = [get_average_waiting_time(file) for file in pod_opt_files_exp2]
 
 # Check for any processing errors
 if None in avg_waiting_time_50 or None in avg_waiting_time_80 or None in avg_waiting_time_pod or None in avg_waiting_time_pod_opt:
@@ -83,6 +68,6 @@ plt.ylabel('Average Passenger Waiting Time(seconds)')
 plt.grid(True)
 plt.xticks(passenger_counts)
 plt.legend()
-plt.show()
+# plt.show()
 # Save the plot
 plt.savefig('average_waiting_time_comparison_exp1_pod_opt.png')

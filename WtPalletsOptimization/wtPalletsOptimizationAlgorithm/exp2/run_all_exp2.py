@@ -29,7 +29,8 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 scripts = [
     os.path.join(current_dir, "exp2_Unoptimized.py"),
     os.path.join(current_dir, "exp2_Optimized.py"),
-    os.path.join(current_dir, "truck_automated_exp2.py")
+    os.path.join(current_dir, "truck_automated_exp2.py"),
+    os.path.join(current_dir, "exp2_waiting_plot.py"),
 ]
 
 for script in scripts:

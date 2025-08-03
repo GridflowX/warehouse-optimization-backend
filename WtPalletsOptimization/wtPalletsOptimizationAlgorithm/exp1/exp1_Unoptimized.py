@@ -7,7 +7,7 @@ import os
 import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from commonCoordinates import time_edges, distance_edges, stops
+from commonCoordinates import time_edges, distance_edges, stops, minimum_distance, board_deboard, passenger_counts
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -27,12 +27,7 @@ distance_graph = nx.Graph()
 for u, v, w in distance_edges:
     distance_graph.add_edge(u, v, weight=w)
 
-# Global constants
-minimum_distance = 4
-board_deboard = 4
-
 # Passenger counts array and corresponding output file names
-passenger_counts = [392, 896, 2968, 4032, 5040, 7952]
 output_files = [f"{count}_exp1.csv" for count in passenger_counts]
 
 # Utility functions
@@ -188,7 +183,7 @@ for passenger_count, output_file in zip(passenger_counts, output_files):
                 travel_time, wait_time, destination_time, distance
             ])
 
-    print(f"Exported {passenger_count} passengers to {output_file}.")
+    #print(f"Exported {passenger_count} passengers to {output_file}.")
 
 # Close database connection
 conn.commit()

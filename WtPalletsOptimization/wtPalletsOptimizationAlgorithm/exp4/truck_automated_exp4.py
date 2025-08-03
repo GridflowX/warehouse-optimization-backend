@@ -5,41 +5,24 @@ import sqlite3
 import pandas as pd
 import os
 from datetime import datetime
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from commonCoordinates import time_edges, SPEED_KM_PER_HOUR, board_deboard, distance_edges, stops, bus_routes_1, bus_routes_2, bus_routes_3, bus_routes_4, bus_routes_5, passenger_counts, capacities, bus_distances, bus_previous_stops, bus_trip_counts, start_node, stop_node, paths, bus_paths, bus_distances_update, bus_previous_stops_update, bus_trip_counts_update, outskirt_stop, central_stops, other_stops_exp4, desti_stop
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Define bus stops
-elements = ['A', 'B', 'C', 'D', 'P', 'Q', 'R', 'S']
+elements = stops
 
 # Connect to the SQLite database
 conn = sqlite3.connect(os.path.join(current_dir, 'buss.db'))
-
 cursor = conn.cursor()
 
 # Define bus network graph (travel times in seconds)
 graph = nx.Graph()
-graph.add_edge('A', 'B', weight=1170)
-graph.add_edge('B', 'Q', weight=1800)
-graph.add_edge('B', 'C', weight=630)
-graph.add_edge('B', 'R', weight=1350)
-graph.add_edge('C', 'D', weight=1530)
-graph.add_edge('P', 'Q', weight=900)
-graph.add_edge('R', 'S', weight=450)
-
-# Constants
-board_deboard = 4
-SPEED_KM_PER_HOUR = 40
-
-# Bus Paths
-bus1_path = ['A', 'B', 'C', 'D', 'C', 'B']  # Bus ID = 1
-bus2_path = ['D', 'C', 'B', 'A', 'B', 'C']  # Bus ID = 2
-bus3_path = ['P', 'Q', 'B', 'R', 'S', 'R', 'B', 'Q']  # Bus ID = 3
-bus4_path = ['S', 'R', 'B', 'Q', 'P', 'Q', 'B', 'R']  # Bus ID = 4
-
-# Initialize dictionaries
-bus_distances = {1: 0, 2: 0, 3: 0, 4: 0}
-bus_previous_stops = {1: None, 2: None, 3: None, 4: None}
-bus_trip_counts = {1: 0, 2: 0, 3: 0, 4: 0}
+for u, v, w in time_edges:
+    graph.add_edge(u, v, weight=w)
 
 # Function to generate random arrival time
 def generate_random_arrival_time():
@@ -64,18 +47,11 @@ def reset_passenger_table():
 # Function to initialize the bus table
 def initialize_bus_table():
     cursor.execute("DELETE FROM bus")
-    cursor.execute(
+    for idx, (start, stop, path) in enumerate(zip(start_node, stop_node, paths), start=1):
+        cursor.execute(
         "INSERT INTO bus (id, present_stop, destination_stop, time, path, passenger_count) VALUES (?, ?, ?, ?, ?, ?)",
-        (1, 'A', 'B', 0, 'ABCD', 0))
-    cursor.execute(
-        "INSERT INTO bus (id, present_stop, destination_stop, time, path, passenger_count) VALUES (?, ?, ?, ?, ?, ?)",
-        (2, 'D', 'C', 0, 'DCBA', 0))
-    cursor.execute(
-        "INSERT INTO bus (id, present_stop, destination_stop, time, path, passenger_count) VALUES (?, ?, ?, ?, ?, ?)",
-        (3, 'P', 'Q', 0, 'PQBRS', 0))
-    cursor.execute(
-        "INSERT INTO bus (id, present_stop, destination_stop, time, path, passenger_count) VALUES (?, ?, ?, ?, ?, ?)",
-        (4, 'S', 'R', 0, 'SRBQP', 0))
+        (idx, start, stop, 0, path, 0)
+    )
     conn.commit()
     print("Bus table initialized.")
 
@@ -227,16 +203,16 @@ def log_cost_value(total_distance_all_buses, total_passenger_count, capacity):
 def main_simulation(total_passenger_count, capacity):
     reset_passenger_table()
     initialize_bus_table()
-    bus_distances.update({1: 0, 2: 0, 3: 0, 4: 0})
-    bus_previous_stops.update({1: None, 2: None, 3: None, 4: None})
-    bus_trip_counts.update({1: 0, 2: 0, 3: 0, 4: 0})
+    bus_distances.update(bus_distances_update)
+    bus_previous_stops.update(bus_previous_stops_update)
+    bus_trip_counts.update(bus_trip_counts_update)
     random.seed(total_passenger_count + 10)
-    other_stops = ['A', 'C', 'D', 'P', 'Q', 'R', 'S']
+    other_stops = other_stops_exp4
     all_stops = elements
     b_passengers = int(total_passenger_count * 0.7)
     other_passengers = total_passenger_count - b_passengers
     for i in range(b_passengers):
-        arrival_stop = 'B'
+        arrival_stop = desti_stop
         destination_stop = random.choice([stop for stop in all_stops if stop != arrival_stop])
         arrival_time = generate_random_arrival_time()
         path = shortestPath(arrival_stop, destination_stop)
@@ -256,7 +232,7 @@ def main_simulation(total_passenger_count, capacity):
             (arrival_time, arrival_stop, destination_stop, 0, 0, 0, path, 0, 0, 0, arrival_time, 0)
         )
     conn.commit()
-    print(f"{total_passenger_count} Passengers added successfully for capacity {capacity} (70% from 'B', 30% from others).")
+    print(f"{total_passenger_count} Passengers added successfully for capacity {capacity} (70% from {desti_stop}, 30% from others).")
     calculate_distance_for_passengers()
     cursor.execute("SELECT COUNT(*) FROM passenger WHERE reached=0")
     initial_remaining = cursor.fetchone()[0]
@@ -290,28 +266,18 @@ def main_simulation(total_passenger_count, capacity):
         for bus in buses:
             busid, present_stop, destination_stop, t, path, bus_passenger_count = bus
             print(f"Processing Bus {busid} at {t}, Current stop: {present_stop}, Destination: {destination_stop}")
-            if path == 'ABCD':
-                next_stop = bus1_path[i % 6]
-                bus_passenger_count = busfunction(busid, present_stop, destination_stop, next_stop, bus1_path, t,
-                                                  bus_passenger_count, capacity)
-            elif path == 'DCBA':
-                next_stop = bus2_path[i % 6]
-                bus_passenger_count = busfunction(busid, present_stop, destination_stop, next_stop, bus2_path, t,
-                                                  bus_passenger_count, capacity)
-            elif path == 'PQBRS':
-                next_stop = bus3_path[i % 8]
-                bus_passenger_count = busfunction(busid, present_stop, destination_stop, next_stop, bus3_path, t,
-                                                  bus_passenger_count, capacity)
+            bus_path = bus_paths.get(path)
+
+            if bus_path:
+                next_stop = bus_path[i % len(bus_path)]
+                bus_passenger_count = busfunction(
+                    busid, present_stop, destination_stop, next_stop,
+                    bus_path, t, bus_passenger_count, capacity
+                )
             else:
-                next_stop = bus4_path[i % 8]
-                bus_passenger_count = busfunction(busid, present_stop, destination_stop, next_stop, bus4_path, t,
-                                                  bus_passenger_count, capacity)
+                print(f"Warning: Unknown path '{path}' for bus ID {busid}")
             maxi = max(maxi, bus_passenger_count)
         i += 1
-
-# Process all passenger counts for both capacities
-passenger_counts = [392, 896, 2968, 4032, 5040, 7952]
-capacities = [50, 80]
 
 for passenger_count in passenger_counts:
     for capacity in capacities:

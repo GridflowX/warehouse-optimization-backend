@@ -4,36 +4,21 @@ import networkx as nx
 import os
 from collections import defaultdict
 
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from commonCoordinates import time_edges, distance_edges, stops, MAX_PODS, board_deboard, passenger_counts
+
 # Graph for routing (time in seconds)
 graph = nx.Graph()
-graph.add_edges_from([
-    ('A', 'B', {'weight': 1170}),
-    ('B', 'Q', {'weight': 1800}),
-    ('B', 'C', {'weight': 630}),
-    ('B', 'R', {'weight': 1350}),
-    ('C', 'D', {'weight': 1530}),
-    ('P', 'Q', {'weight': 900}),
-    ('R', 'S', {'weight': 450}),
-])
+# Define all edges with time weights
+for u, v, w in time_edges:
+    graph.add_edge(u, v, weight=w)
 
 # Graph for distances (in km)
 g = nx.Graph()
-g.add_edge('A', 'B', weight=13)
-g.add_edge('B', 'Q', weight=20)
-g.add_edge('B', 'C', weight=7)
-g.add_edge('B', 'R', weight=15)
-g.add_edge('C', 'D', weight=17)
-g.add_edge('P', 'Q', weight=10)
-g.add_edge('R', 'S', weight=5)
-
-board_deboard = 4
-#os.makedirs("output", exist_ok=True)
-MAX_PODS = 184
-
-# Now CSV files instead of Excel files
-csv_files = [
-      "392_exp2.csv", "896_exp2.csv","2968_exp2.csv", "4032_exp2.csv", "5040_exp2.csv","7952_exp2.csv",
-]
+for u, v, w in distance_edges:
+    g.add_edge(u, v, weight=w)
 
 def travel_time(from_stop, to_stop):
     try:
@@ -46,6 +31,10 @@ def travel_distance(from_stop, to_stop):  # in km
         return nx.dijkstra_path_length(g, from_stop, to_stop)
     except nx.NetworkXNoPath:
         return 0
+    
+csv_files = [
+    f"{count}_exp2.csv" for count in passenger_counts
+]
 
 for file in csv_files:
     df = pd.read_csv(file)

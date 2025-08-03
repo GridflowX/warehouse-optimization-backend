@@ -3,44 +3,30 @@ import networkx as nx
 import sqlite3
 import csv
 import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from commonCoordinates import time_edges, distance_edges, stops, minimum_distance, board_deboard, passenger_counts, desti_stop
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
-
 # Initialize database connection
 conn = sqlite3.connect(os.path.join(current_dir, 'collide.db'))
-
 cursor = conn.cursor()
 
 # Initialize the time-based graph
 graph = nx.Graph()
-graph.add_edge('A', 'B', weight=1170)
-graph.add_edge('B', 'Q', weight=1800)
-graph.add_edge('B', 'C', weight=630)
-graph.add_edge('B', 'R', weight=1350)
-graph.add_edge('C', 'D', weight=1530)
-graph.add_edge('P', 'Q', weight=900)
-graph.add_edge('R', 'S', weight=450)
 
-# Initialize the distance-based graph
+# Define all edges with time weights
+for u, v, w in time_edges:
+    graph.add_edge(u, v, weight=w)
+
+# Initialize the distance-based graph (for distance calculation)
 distance_graph = nx.Graph()
-distance_graph.add_edge('A', 'B', weight=13)
-distance_graph.add_edge('B', 'Q', weight=20)
-distance_graph.add_edge('B', 'C', weight=7)
-distance_graph.add_edge('B', 'R', weight=15)
-distance_graph.add_edge('C', 'D', weight=17)
-distance_graph.add_edge('P', 'Q', weight=10)
-distance_graph.add_edge('R', 'S', weight=5)
+for u, v, w in distance_edges:
+    distance_graph.add_edge(u, v, weight=w)
 
-# Stops and positions
-stops = ['A', 'B', 'C', 'D', 'P', 'Q', 'R', 'S']
-
-# Global constants
-minimum_distance = 4
-board_deboard = 4
-
-# Passenger counts and output files
-passenger_counts = [392, 896, 2968, 4032, 5040, 7952]
+# Output files for exp3
 output_files = [f"{count}_exp3.csv" for count in passenger_counts]
 
 # Utility functions
@@ -159,7 +145,7 @@ for passenger_count, output_file in zip(passenger_counts, output_files):
     for pid in range(passenger_count):
         arrival_stop = random.choice(stops)
         if random.random() <= 0.7:
-            destination_stop = 'B' if arrival_stop != 'B' else random.choice([stop for stop in stops if stop != arrival_stop])
+            destination_stop = desti_stop if arrival_stop != desti_stop else random.choice([stop for stop in stops if stop != arrival_stop])
         else:
             destination_stop = random.choice([stop for stop in stops if stop != arrival_stop])
         arrival_time = generate_uniform_arrival_time()

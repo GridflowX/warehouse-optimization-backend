@@ -1,5 +1,18 @@
 import subprocess
 import os
+import json
+
+gudieway_data_str = os.getenv("GUIDEWAY_DATA")
+
+if gudieway_data_str:
+    guideway_data = json.loads(gudieway_data_str)
+
+    # Write to file
+    with open("common_coordinates_data.json", "w") as f:
+        json.dump(guideway_data, f)
+    # Use it now
+else:
+    print("GUIDEWAY_DATA not found in environment")
 
 def run(script_path):
     print(f"\nRunning {script_path}...\n")
@@ -30,7 +43,7 @@ scripts = [
     os.path.join(current_dir, "exp1", "run_all_exp1.py"),
     # os.path.join(current_dir, "exp2", "run_all_exp2.py"),
     # os.path.join(current_dir, "exp3", "run_all_exp3.py"),
-    # os.path.join(current_dir, "exp4", "run_all_exp4.py"),
+    # os.path.join(current_dir, "exp4", "run_all_exp4.py")
 ]
 
 for script in scripts:
