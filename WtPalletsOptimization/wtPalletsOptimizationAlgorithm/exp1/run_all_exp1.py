@@ -32,7 +32,7 @@ scripts = [
     os.path.join(current_dir, "exp1_Unoptimized.py"),
     # os.path.join(current_dir, "exp1_Optimized.py"),
     os.path.join(current_dir, "truck_automated_exp1.py"),
-    os.path.join(current_dir, "exp1_waiting_plot.py"),
+    #os.path.join(current_dir, "exp1_waiting_plot.py"),
 ]
 
 # for script in scripts:
