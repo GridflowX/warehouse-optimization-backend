@@ -32,7 +32,8 @@ scripts = [
     os.path.join(current_dir, "exp1_Unoptimized.py"),
     # os.path.join(current_dir, "exp1_Optimized.py"),
     os.path.join(current_dir, "truck_automated_exp1.py"),
-    os.path.join(current_dir, "exp1_waiting_plot.py"),
+    os.path.join(current_dir, "truck_automated_exp1.py"),
+    #os.path.join(current_dir, "exp1_waiting_plot.py"),
 ]
 
 # for script in scripts:
@@ -41,16 +42,16 @@ scripts = [
 # Create threads for the first two scripts
 thread1 = threading.Thread(target=run, args=(scripts[0],))
 thread2 = threading.Thread(target=run, args=(scripts[1],))
+thread3 = threading.Thread(target=run, args=(scripts[2],))
 
 # Start both threads
 thread1.start()
 thread2.start()
+thread3.start()
 
 # Wait for both to complete
 thread1.join()
 thread2.join()
-
-# Now run the third script (after the first two finish)
-run(scripts[2])
+thread3.join()
 
 print("All experiments completed.")

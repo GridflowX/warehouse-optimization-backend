@@ -9,3 +9,9 @@ dimensions
 dimensions/*
 
 CLAUDE.md
+
+.env
+
+/*.yaml
+
+/*.yaml.bak
