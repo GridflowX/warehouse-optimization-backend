@@ -10,7 +10,7 @@ import requests
 def run_algorithm():
     try:
         # Fetch output from algo1
-        r = requests.get("http://mainbackend:8000/output")
+        r = requests.get("http://guidewayoptimization:8000/output")
         r.raise_for_status()
         guideway_data = r.json()
     
