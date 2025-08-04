@@ -120,12 +120,12 @@ plt.bar(x, avg_large, width, label='Large Truck', color='green')
 plt.bar(x + width, avg_pod, width, label='Pod based Robotic System', color='red')
 
 plt.axhline(y=1800, color='black', linestyle=':', label='30 min (1800s)')
-
-plt.title('Experiment 1: Average delivery delay vs. Number of Pallets')
-plt.xlabel('Number of Pallets')
-plt.ylabel('Average Pallet delivery delay (seconds)')
-plt.xticks(x, pallet_counts)
-plt.grid(axis='y')
+# Labels and title
+plt.title('Experiment 1: Average Waiting Time vs. Number of Passengers (with Optimised Pod)')
+plt.xlabel('Number of Passengers')
+plt.ylabel('Average Passenger Waiting Time(seconds)')
+plt.grid(True)
+plt.xticks(pallet_counts)
 plt.legend()
 plt.tight_layout()
 plt.savefig('exp1_barplot_narrow.png', dpi=100, bbox_inches='tight')

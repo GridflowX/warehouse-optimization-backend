@@ -9,7 +9,7 @@ from datetime import datetime
 import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from commonCoordinates import time_edges, SPEED_KM_PER_HOUR, load_unload, stops, pallet_counts, capacities1, truck_distances, truck_previous_stops, truck_trip_counts, start_node, stop_node, paths, truck_paths, truck_distances_update, truck_previous_stops_update, truck_trip_counts_update
+from commonCoordinates import time_edges, SPEED_KM_PER_HOUR, load_unload, stops, pallet_counts, capacities2, truck_distances, truck_previous_stops, truck_trip_counts, start_node, stop_node, paths, truck_paths, truck_distances_update, truck_previous_stops_update, truck_trip_counts_update
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -308,7 +308,7 @@ def main_simulation(total_pallet_count, capacity):
         i += 1
 
 for pallet_count in pallet_counts:
-    for capacity in capacities1:
+    for capacity in capacities2:
         #print(f"\nStarting simulation for {pallet_count} pallets with capacity {capacity}...")
         main_simulation(pallet_count, capacity)
         #pallet_counts = [2968] 

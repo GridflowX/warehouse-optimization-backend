@@ -140,9 +140,9 @@ pallet_counts = [896]
 #truck capacities
 small_truck =  50
 large_truck = 80
-capacities = [small_truck, large_truck]
+capacities1 = [small_truck]
+capacities2 = [large_truck]
 
-# Initialize dictionaries
 truck_distances = {1: 0, 2: 0, 3: 0, 4: 0 ,5: 0}
 truck_previous_stops = {1: None, 2: None, 3: None, 4: None, 5: None}
 truck_trip_counts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
@@ -151,6 +151,7 @@ truck_distances_update = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
 truck_previous_stops_update = {1: None, 2: None, 3: None, 4: None, 5: None}
 truck_trip_counts_update = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
 
+# Function to initialize the truck table
 # Function to initialize the truck table
 start_node = ['A', 'B', 'F', 'C', 'E']
 stop_node = ['H', 'D', 'J', 'I', 'G']
